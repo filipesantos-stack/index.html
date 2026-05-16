@@ -1,0 +1,1652 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#103681">
+<title>Avaliação Semanal — Árealimpa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #f4f6fb;
+    color: #1a2540;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.45;
+  }
+
+  /* HEADER */
+  .topbar {
+    background: linear-gradient(135deg, #103681 0%, #1a4aa8 60%, #449BF5 100%);
+    color: #fff;
+    padding: 18px 18px;
+    padding-top: calc(18px + env(safe-area-inset-top));
+    box-shadow: 0 2px 12px rgba(16, 54, 129, 0.18);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .topbar-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .brand-logo {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    background: #fff;
+    color: #103681;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 16px;
+    letter-spacing: -0.5px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .brand-text { line-height: 1.1; }
+  .brand-title { font-weight: 700; font-size: 16px; letter-spacing: -0.2px; }
+  .brand-sub { font-size: 11px; font-weight: 400; opacity: 0.85; letter-spacing: 0.3px; text-transform: uppercase; }
+
+  .topbar-actions { display: flex; gap: 8px; }
+  .icon-btn {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: #fff;
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s ease;
+  }
+  .icon-btn:hover { background: rgba(255,255,255,0.25); }
+  .icon-btn:active { transform: scale(0.95); }
+
+  /* LAYOUT */
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 16px;
+    padding-bottom: calc(80px + env(safe-area-inset-bottom));
+  }
+
+  /* SCREENS */
+  .screen { display: none; }
+  .screen.active { display: block; animation: fadeIn 0.25s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* HOME — role selection */
+  .hero {
+    background: #fff;
+    border-radius: 18px;
+    padding: 24px 20px;
+    box-shadow: 0 4px 18px rgba(16, 54, 129, 0.06);
+    margin-bottom: 18px;
+    border: 1px solid #e5ebf5;
+  }
+  .hero h1 {
+    margin: 0 0 6px;
+    font-size: 22px;
+    font-weight: 700;
+    color: #103681;
+    letter-spacing: -0.4px;
+  }
+  .hero p { margin: 0; color: #5b6781; font-size: 14px; }
+
+  .section-label {
+    text-transform: uppercase;
+    font-size: 11px;
+    font-weight: 600;
+    color: #103681;
+    letter-spacing: 1.5px;
+    margin: 22px 4px 10px;
+  }
+
+  .role-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  @media (min-width: 720px) {
+    .role-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  .role-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 20px;
+    border: 1px solid #e5ebf5;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+    text-align: left;
+    width: 100%;
+    font-family: inherit;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .role-card:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(16,54,129,0.12); border-color: #449BF5; }
+  .role-card:active { transform: translateY(0); }
+  .role-icon {
+    width: 46px; height: 46px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #103681, #449BF5);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    font-weight: 700;
+  }
+  .role-title { font-weight: 600; font-size: 16px; color: #103681; }
+  .role-desc { font-size: 13px; color: #6b7894; line-height: 1.4; }
+  .role-meta {
+    font-size: 11px;
+    font-weight: 500;
+    color: #449BF5;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* HISTORY LIST */
+  .history-empty {
+    background: #fff;
+    border-radius: 14px;
+    padding: 28px 20px;
+    text-align: center;
+    border: 1px dashed #c9d3e8;
+    color: #6b7894;
+    font-size: 14px;
+  }
+  .history-list { display: flex; flex-direction: column; gap: 8px; }
+  .history-item {
+    background: #fff;
+    border-radius: 12px;
+    padding: 14px 16px;
+    border: 1px solid #e5ebf5;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: border-color 0.15s ease;
+  }
+  .history-item:hover { border-color: #449BF5; }
+  .hi-main { flex: 1; min-width: 0; }
+  .hi-name { font-weight: 600; font-size: 14px; color: #1a2540; }
+  .hi-meta { font-size: 12px; color: #6b7894; margin-top: 2px; }
+  .hi-score {
+    text-align: right;
+    min-width: 70px;
+  }
+  .hi-pts { font-weight: 700; font-size: 16px; color: #103681; }
+  .hi-class {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-top: 3px;
+  }
+  .cls-excelente { background: #d4f4dd; color: #0a7d3a; }
+  .cls-bom { background: #d4e7ff; color: #1d4ed8; }
+  .cls-suficiente { background: #fff2cc; color: #8a6300; }
+  .cls-fraco { background: #ffe0d0; color: #b54508; }
+  .cls-critico { background: #ffd4d4; color: #b50808; }
+
+  .hi-delete {
+    background: none;
+    border: none;
+    color: #b04040;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+  }
+  .hi-delete:hover { background: #ffe6e6; }
+
+  /* FORM */
+  .form-header {
+    background: #fff;
+    border-radius: 16px;
+    padding: 18px 20px;
+    margin-bottom: 16px;
+    border: 1px solid #e5ebf5;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 2px 10px rgba(16,54,129,0.04);
+  }
+  .form-header-icon {
+    width: 44px; height: 44px;
+    border-radius: 11px;
+    background: linear-gradient(135deg, #103681, #449BF5);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .form-header-text { flex: 1; min-width: 0; }
+  .form-header-title { font-weight: 700; font-size: 16px; color: #103681; }
+  .form-header-sub { font-size: 12px; color: #6b7894; margin-top: 2px; }
+
+  .form-meta {
+    background: #fff;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 16px;
+    border: 1px solid #e5ebf5;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  @media (min-width: 600px) {
+    .form-meta { grid-template-columns: repeat(2, 1fr); }
+  }
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field label {
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: #5b6781;
+    letter-spacing: 0.8px;
+  }
+  .field input, .field select {
+    border: 1px solid #d4ddec;
+    border-radius: 9px;
+    padding: 10px 12px;
+    font-size: 14px;
+    font-family: inherit;
+    background: #f7f9fd;
+    color: #1a2540;
+    transition: border-color 0.15s ease, background 0.15s ease;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .field input:focus, .field select:focus {
+    outline: none;
+    border-color: #449BF5;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(68, 155, 245, 0.15);
+  }
+
+  /* CATEGORIES */
+  .category {
+    background: #fff;
+    border-radius: 16px;
+    margin-bottom: 14px;
+    border: 1px solid #e5ebf5;
+    overflow: hidden;
+  }
+  .category-header {
+    padding: 14px 18px;
+    background: linear-gradient(90deg, #f4f7fc, #fff);
+    border-bottom: 1px solid #e5ebf5;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .category-num {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: #103681;
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .category-title {
+    font-weight: 700;
+    font-size: 15px;
+    color: #103681;
+    letter-spacing: -0.2px;
+  }
+  .category-sub {
+    font-size: 11px;
+    color: #6b7894;
+    font-style: italic;
+    margin-top: 2px;
+  }
+
+  .criterion {
+    padding: 14px 18px;
+    border-bottom: 1px solid #f0f3fa;
+  }
+  .criterion:last-child { border-bottom: none; }
+  .crit-title {
+    font-weight: 600;
+    font-size: 14px;
+    color: #1a2540;
+    margin-bottom: 3px;
+  }
+  .crit-desc {
+    font-size: 12px;
+    color: #6b7894;
+    margin-bottom: 10px;
+    line-height: 1.4;
+  }
+  .rating-group {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+  }
+  .rating-btn {
+    border: 1.5px solid #d4ddec;
+    background: #f7f9fd;
+    border-radius: 9px;
+    padding: 9px 4px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.12s ease;
+    font-family: inherit;
+    color: #5b6781;
+  }
+  .rating-btn:hover { border-color: #449BF5; }
+  .rating-btn:active { transform: scale(0.96); }
+  .rating-num { font-weight: 700; font-size: 16px; display: block; }
+  .rating-label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.4px; font-weight: 500; margin-top: 2px; }
+
+  .rating-btn.sel-1 { background: #0a7d3a; border-color: #0a7d3a; color: #fff; }
+  .rating-btn.sel-2 { background: #1d4ed8; border-color: #1d4ed8; color: #fff; }
+  .rating-btn.sel-3 { background: #d49a00; border-color: #d49a00; color: #fff; }
+  .rating-btn.sel-4 { background: #d97417; border-color: #d97417; color: #fff; }
+  .rating-btn.sel-5 { background: #c92020; border-color: #c92020; color: #fff; }
+
+  /* BONUS */
+  .bonus-section {
+    background: #fff;
+    border-radius: 16px;
+    margin-bottom: 14px;
+    border: 1px solid #e5ebf5;
+    overflow: hidden;
+  }
+  .bonus-header {
+    padding: 14px 18px;
+    background: linear-gradient(90deg, #fff7e0, #fff);
+    border-bottom: 1px solid #f5e6b3;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .bonus-star {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #f5b800, #ff8c00);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+  }
+  .bonus-info {
+    font-size: 11px;
+    color: #8a6300;
+    margin-top: 2px;
+  }
+  .bonus-list { padding: 8px; }
+  .bonus-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.12s ease;
+    border: 1.5px solid transparent;
+  }
+  .bonus-item:hover { background: #fffbed; }
+  .bonus-item.checked {
+    background: #fff7e0;
+    border-color: #f5b800;
+  }
+  .bonus-check {
+    width: 22px; height: 22px;
+    border: 2px solid #d4ddec;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+    background: #fff;
+    color: #fff;
+    font-weight: 700;
+    font-size: 14px;
+    transition: all 0.15s ease;
+  }
+  .bonus-item.checked .bonus-check {
+    background: linear-gradient(135deg, #f5b800, #ff8c00);
+    border-color: #f5b800;
+  }
+  .bonus-text { flex: 1; }
+  .bonus-title-text { font-weight: 600; font-size: 13px; color: #1a2540; }
+  .bonus-desc-text { font-size: 11px; color: #6b7894; margin-top: 2px; line-height: 1.35; }
+  .bonus-points {
+    font-size: 12px;
+    font-weight: 700;
+    color: #b54508;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* NOTES */
+  .notes-section {
+    background: #fff;
+    border-radius: 16px;
+    padding: 16px 18px;
+    margin-bottom: 14px;
+    border: 1px solid #e5ebf5;
+  }
+  .notes-section label {
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: #103681;
+    letter-spacing: 0.8px;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .notes-section textarea {
+    width: 100%;
+    min-height: 90px;
+    border: 1px solid #d4ddec;
+    border-radius: 10px;
+    padding: 12px;
+    font-family: inherit;
+    font-size: 14px;
+    background: #f7f9fd;
+    color: #1a2540;
+    resize: vertical;
+    line-height: 1.45;
+  }
+  .notes-section textarea:focus {
+    outline: none;
+    border-color: #449BF5;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(68, 155, 245, 0.15);
+  }
+
+  /* SCORE PANEL */
+  .score-panel {
+    background: linear-gradient(135deg, #103681, #449BF5);
+    color: #fff;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 14px;
+    box-shadow: 0 6px 20px rgba(16, 54, 129, 0.25);
+  }
+  .score-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .score-box { text-align: center; }
+  .score-num { font-size: 24px; font-weight: 800; letter-spacing: -1px; }
+  .score-lab { font-size: 10px; text-transform: uppercase; opacity: 0.85; letter-spacing: 0.6px; margin-top: 2px; }
+  .score-total {
+    text-align: center;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255,255,255,0.2);
+  }
+  .score-total-num {
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: -1.5px;
+  }
+  .score-total-lab { font-size: 11px; text-transform: uppercase; opacity: 0.9; letter-spacing: 1px; }
+  .score-class {
+    margin-top: 8px;
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    background: rgba(255,255,255,0.2);
+  }
+
+  /* BUTTONS */
+  .btn-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .btn {
+    padding: 14px 18px;
+    border-radius: 11px;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.1s ease, box-shadow 0.15s ease, background 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .btn:active { transform: scale(0.98); }
+  .btn-primary {
+    background: linear-gradient(135deg, #103681, #1a4aa8);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(16,54,129,0.25);
+  }
+  .btn-primary:hover { box-shadow: 0 6px 18px rgba(16,54,129,0.35); }
+  .btn-secondary {
+    background: #fff;
+    color: #103681;
+    border: 1.5px solid #d4ddec;
+  }
+  .btn-secondary:hover { border-color: #449BF5; }
+  .btn-danger {
+    background: #fff;
+    color: #b50808;
+    border: 1.5px solid #ffd4d4;
+  }
+  .btn-danger:hover { background: #fff5f5; }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: calc(20px + env(safe-area-inset-bottom));
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: #103681;
+    color: #fff;
+    padding: 12px 22px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    z-index: 200;
+    opacity: 0;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    max-width: 90%;
+    text-align: center;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  .toast.success { background: #0a7d3a; }
+  .toast.error { background: #b50808; }
+
+  /* MODAL */
+  .modal-bg {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(16, 25, 50, 0.55);
+    z-index: 300;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+  .modal-bg.show { display: flex; }
+  .modal {
+    background: #fff;
+    border-radius: 18px;
+    padding: 24px;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+  }
+  .modal h3 { margin: 0 0 8px; color: #103681; font-size: 18px; }
+  .modal p { margin: 0 0 18px; color: #5b6781; font-size: 14px; }
+  .modal-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  /* PRINT */
+  @media print {
+    body { background: #fff; }
+    .topbar, .btn-row, .icon-btn, #backBtn { display: none !important; }
+    .container { padding: 0; max-width: 100%; }
+    .category, .form-header, .form-meta, .bonus-section, .notes-section, .score-panel {
+      box-shadow: none;
+      border: 1px solid #ccc;
+      page-break-inside: avoid;
+    }
+  }
+
+  /* ACCESSIBILITY */
+  button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+    outline: 2px solid #449BF5;
+    outline-offset: 2px;
+  }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-logo">AL</div>
+      <div class="brand-text">
+        <div class="brand-title">Árealimpa</div>
+        <div class="brand-sub">Avaliação Semanal</div>
+      </div>
+    </div>
+    <div class="topbar-actions">
+      <button id="backBtn" class="icon-btn" title="Voltar" style="display:none;">&larr;</button>
+      <button id="homeBtn" class="icon-btn" title="Início">&#8962;</button>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- HOME SCREEN -->
+  <section id="screen-home" class="screen active">
+    <div class="hero">
+      <h1>Bem-vindo</h1>
+      <p>Escolhe a função do colaborador a avaliar. Os formulários são guardados automaticamente neste dispositivo.</p>
+    </div>
+
+    <div class="section-label">Nova avaliação</div>
+    <div class="role-grid" id="roleGrid"></div>
+
+    <div class="section-label">Histórico</div>
+    <div id="historyContainer"></div>
+  </section>
+
+  <!-- FORM SCREEN -->
+  <section id="screen-form" class="screen">
+    <div class="form-header">
+      <div class="form-header-icon" id="formIcon">?</div>
+      <div class="form-header-text">
+        <div class="form-header-title" id="formTitle">Avaliação</div>
+        <div class="form-header-sub" id="formSubtitle">Árealimpa</div>
+      </div>
+    </div>
+
+    <div class="form-meta">
+      <div class="field">
+        <label>Nome do Colaborador *</label>
+        <input type="text" id="metaNome" placeholder="Ex: João Silva">
+      </div>
+      <div class="field">
+        <label>Semana de</label>
+        <input type="date" id="metaSemana">
+      </div>
+      <div class="field">
+        <label>Avaliado por</label>
+        <input type="text" id="metaAvaliador" placeholder="Nome do avaliador">
+      </div>
+      <div class="field" id="metaEquipaField">
+        <label>Equipa</label>
+        <input type="text" id="metaEquipa" placeholder="Ex: Equipa Norte">
+      </div>
+      <div class="field">
+        <label>Nº de Obras na Semana</label>
+        <input type="number" id="metaObras" min="0" placeholder="0">
+      </div>
+      <div class="field" id="metaEquipasField" style="display:none;">
+        <label>Nº de Equipas Geridas</label>
+        <input type="number" id="metaEquipas" min="0" placeholder="0">
+      </div>
+    </div>
+
+    <div id="categoriesContainer"></div>
+
+    <div id="bonusContainer"></div>
+
+    <div class="notes-section">
+      <label>&#9998; Observações do avaliador</label>
+      <textarea id="notesField" placeholder="Contexto, pontos de melhoria ou reconhecimento específico desta semana..."></textarea>
+    </div>
+
+    <div class="score-panel">
+      <div class="score-grid">
+        <div class="score-box">
+          <div class="score-num" id="scoreBase">0</div>
+          <div class="score-lab">Base</div>
+        </div>
+        <div class="score-box">
+          <div class="score-num" id="scoreBonus">0</div>
+          <div class="score-lab">Bónus</div>
+        </div>
+        <div class="score-box">
+          <div class="score-num" id="scoreMax">0</div>
+          <div class="score-lab">Máximo</div>
+        </div>
+      </div>
+      <div class="score-total">
+        <div class="score-total-num" id="scoreTotal">0</div>
+        <div class="score-total-lab">Pontuação final</div>
+        <div class="score-class" id="scoreClass">—</div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-secondary" id="exportBtn">&#128190; Exportar</button>
+      <button class="btn btn-primary" id="saveBtn">&#10003; Guardar</button>
+    </div>
+
+    <div class="btn-row" style="grid-template-columns: 1fr;">
+      <button class="btn btn-danger" id="clearBtn">&#10005; Limpar formulário</button>
+    </div>
+  </section>
+
+</main>
+
+<div id="toast" class="toast"></div>
+
+<div id="modalBg" class="modal-bg">
+  <div class="modal">
+    <h3 id="modalTitle">Confirmar</h3>
+    <p id="modalMsg">Tens a certeza?</p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" id="modalCancel">Cancelar</button>
+      <button class="btn btn-primary" id="modalOk">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   ÁREALIMPA - AVALIAÇÃO SEMANAL
+   ES5 puro - compatibilidade total iOS/Safari/Chrome/Edge
+   ============================================================ */
+
+(function() {
+  'use strict';
+
+  /* ---------- DATA: ROLE TEMPLATES ---------- */
+  var ROLES = {
+    operador: {
+      id: 'operador',
+      icon: 'OP',
+      title: 'Operador',
+      subtitle: 'Avaliação Semanal — Operador',
+      desc: 'Trabalho no terreno, postura e atitude.',
+      meta: '10 critérios · máx. 50 pts',
+      maxScore: 50,
+      categories: [
+        {
+          num: 1,
+          title: 'Desempenho Operacional',
+          sub: 'Qualidade do trabalho no terreno — o que o cliente vê e sente',
+          criteria: [
+            { t: 'Qualidade do trabalho entregue', d: 'O resultado está limpo, apresentável e dentro dos standards Árealimpa?' },
+            { t: 'Cumprimento de prazos e horários', d: 'Chegou a horas? Cumpriu o tempo estimado para a obra?' },
+            { t: 'Utilização correta dos produtos SoftWash', d: 'Dosagens, aplicação e sequência de produto seguidas corretamente?' },
+            { t: 'Cuidado com os equipamentos', d: 'Máquinas e material tratados, limpos e guardados corretamente no final do dia?' },
+            { t: 'Cumprimento das normas de segurança', d: 'EPI utilizado? Procedimentos de segurança respeitados em toda a obra?' }
+          ]
+        },
+        {
+          num: 2,
+          title: 'Postura e Atitude',
+          sub: 'A mentalidade que faz a diferença — quem veste a camisola de verdade',
+          criteria: [
+            { t: 'Iniciativa e proatividade', d: 'Antecipou problemas? Tomou decisões sem precisar de ser mandado?' },
+            { t: 'Comunicação com a chefia', d: 'Reportou situações relevantes? Zero surpresas no final?' },
+            { t: 'Apresentação pessoal e imagem da marca', d: 'Fardamento correto e limpo? Veículo apresentável? Representa bem a Árealimpa?' },
+            { t: 'Relação com o cliente em obra', d: 'Tratou o cliente com respeito? Deixou boa impressão? Zero reclamações?' },
+            { t: 'Responsabilidade e autonomia', d: 'Assumiu os erros? Resolveu problemas no local sem criar dependência?' }
+          ]
+        }
+      ],
+      bonus: [
+        { t: 'Trouxe um novo cliente ou lead', d: 'Recomendação, contacto ou oportunidade identificada em obra' },
+        { t: 'Feedback positivo do cliente (escrito)', d: 'Mensagem, e-mail ou avaliação positiva recebida' },
+        { t: 'Zero incidentes ou reclamações na semana', d: 'Semana limpa — sem problemas, sem surpresas' },
+        { t: 'Contribuiu com uma melhoria ou ideia', d: 'Sugestão que melhora a equipa, os processos ou os clientes' },
+        { t: 'Ajudou um colega sem ser pedido', d: 'Espírito de equipa demonstrado de forma espontânea' },
+        { t: 'Formação ou treino extra concluído', d: 'Vídeo, ação interna ou certificação voluntária' }
+      ],
+      thresholds: [
+        { max: 16, label: 'Excelente', cls: 'excelente' },
+        { max: 25, label: 'Bom', cls: 'bom' },
+        { max: 32, label: 'Suficiente', cls: 'suficiente' },
+        { max: 41, label: 'Fraco', cls: 'fraco' },
+        { max: 50, label: 'Crítico', cls: 'critico' }
+      ]
+    },
+
+    chefe: {
+      id: 'chefe',
+      icon: 'CE',
+      title: 'Chefe de Equipa',
+      subtitle: 'Avaliação Semanal — Chefe de Equipa',
+      desc: 'Operacional, liderança e coordenação em obra.',
+      meta: '18 critérios · máx. 90 pts',
+      maxScore: 90,
+      categories: [
+        {
+          num: 1,
+          title: 'Desempenho Operacional',
+          sub: 'Qualidade do trabalho no terreno — o que o cliente vê e sente',
+          criteria: [
+            { t: 'Qualidade do trabalho entregue', d: 'O resultado está limpo, apresentável e dentro dos standards Árealimpa?' },
+            { t: 'Cumprimento de prazos e horários', d: 'A equipa chegou a horas? O tempo estimado foi cumprido?' },
+            { t: 'Utilização correta dos produtos SoftWash', d: 'Dosagens, aplicação e sequência de produto supervisionadas corretamente?' },
+            { t: 'Cuidado com os equipamentos', d: 'Máquinas e material tratados, limpos e guardados no final do dia?' },
+            { t: 'Cumprimento das normas de segurança', d: 'EPI utilizado pela equipa? Procedimentos respeitados em toda a obra?' }
+          ]
+        },
+        {
+          num: 2,
+          title: 'Postura e Atitude',
+          sub: 'A mentalidade que faz a diferença — quem veste a camisola de verdade',
+          criteria: [
+            { t: 'Iniciativa e proatividade', d: 'Antecipou problemas? Tomou decisões sem precisar de ser mandado?' },
+            { t: 'Comunicação ascendente', d: 'Reportou situações relevantes ao encarregado/gestão? Zero surpresas?' },
+            { t: 'Apresentação pessoal e imagem da marca', d: 'Fardamento correto e limpo? Veículo apresentável? Representa bem a Árealimpa?' },
+            { t: 'Relação com o cliente em obra', d: 'Tratou o cliente com respeito? Deixou boa impressão? Zero reclamações?' },
+            { t: 'Responsabilidade e autonomia', d: 'Assumiu os erros? Resolveu problemas no local sem criar dependência?' }
+          ]
+        },
+        {
+          num: 3,
+          title: 'Liderança de Equipa',
+          sub: 'Como gere, motiva e desenvolve quem está à sua volta',
+          criteria: [
+            { t: 'Organização e distribuição de tarefas', d: 'Distribuiu o trabalho de forma eficiente? A equipa sabia o que fazer?' },
+            { t: 'Motivação e clima de equipa', d: 'A equipa trabalhou com boa energia? Conflitos foram bem geridos?' },
+            { t: 'Transmissão de conhecimento e coaching', d: 'Partilhou técnicas, corrigiu erros dos colegas, ensinou em obra?' },
+            { t: 'Resolução de conflitos e problemas em obra', d: 'Geriu desentendimentos com calma? Resolveu imprevistos sem escalar?' },
+            { t: 'Comunicação descendente clara', d: 'As instruções foram claras e percebidas por todos os operadores?' }
+          ]
+        },
+        {
+          num: 4,
+          title: 'Planeamento e Coordenação',
+          sub: 'A capacidade de preparar, antecipar e garantir que tudo funciona',
+          criteria: [
+            { t: 'Planeamento antecipado das obras', d: 'Verificou os materiais, rotas e necessidades antes de sair? Chegou preparado?' },
+            { t: 'Gestão de materiais e equipamentos da equipa', d: 'Controlou o consumo? Reportou falhas ou necessidades de reposição?' },
+            { t: 'Monitorização de qualidade em obra', d: 'Verificou o trabalho da equipa antes de sair de cada obra?' }
+          ]
+        }
+      ],
+      bonus: [
+        { t: 'Trouxe um novo cliente ou lead', d: 'Recomendação, contacto ou oportunidade identificada em obra' },
+        { t: 'Feedback positivo do cliente (escrito)', d: 'Mensagem, e-mail ou avaliação positiva recebida' },
+        { t: 'Zero incidentes ou reclamações na semana', d: 'Semana limpa — sem problemas, sem surpresas' },
+        { t: 'Contribuiu com uma melhoria ou ideia', d: 'Sugestão que melhora a equipa, os processos ou os clientes' },
+        { t: 'Ajudou um colega/operador sem ser pedido', d: 'Espírito de equipa demonstrado de forma espontânea' },
+        { t: 'Formou ou orientou um operador na semana', d: 'Ensinou em obra, corrigiu técnica ou fez acompanhamento prático' },
+        { t: 'Garantiu 100% de pontualidade da equipa', d: 'Toda a equipa a horas em todas as obras da semana' }
+      ],
+      thresholds: [
+        { max: 28, label: 'Excelente', cls: 'excelente' },
+        { max: 45, label: 'Bom', cls: 'bom' },
+        { max: 58, label: 'Suficiente', cls: 'suficiente' },
+        { max: 72, label: 'Fraco', cls: 'fraco' },
+        { max: 90, label: 'Crítico', cls: 'critico' }
+      ]
+    },
+
+    encarregado: {
+      id: 'encarregado',
+      icon: 'EN',
+      title: 'Encarregado',
+      subtitle: 'Avaliação Semanal — Encarregado',
+      desc: 'Gestão operacional, comunicação e resultados.',
+      meta: '19 critérios · máx. 95 pts',
+      maxScore: 95,
+      categories: [
+        {
+          num: 1,
+          title: 'Gestão Operacional',
+          sub: 'Controlo e eficiência das operações sob a sua responsabilidade',
+          criteria: [
+            { t: 'Desempenho geral das equipas', d: 'As equipas atingiram os objetivos de qualidade e produtividade da semana?' },
+            { t: 'Planeamento e organização das obras', d: 'As obras foram planeadas com antecedência? Rotas, materiais e recursos assegurados?' },
+            { t: 'Gestão de recursos (materiais, equipamentos, viaturas)', d: 'Os recursos foram geridos com eficiência? Sem desperdícios nem faltas?' },
+            { t: 'Controlo de qualidade no terreno', d: 'Visitou e supervisionou as obras? Padrões Árealimpa cumpridos?' },
+            { t: 'Segurança e gestão de risco', d: 'Todas as equipas com EPI? Procedimentos de segurança aplicados e monitorizados?' }
+          ]
+        },
+        {
+          num: 2,
+          title: 'Comunicação e Relações',
+          sub: 'A capacidade de articular, informar e representar a Árealimpa',
+          criteria: [
+            { t: 'Comunicação com a gestão/administração', d: 'Reportou situações relevantes? Informação atualizada e sem surpresas?' },
+            { t: 'Relação com clientes', d: 'Geriu expectativas, contactos e reclamações de forma profissional?' },
+            { t: 'Relatórios e registo de informação', d: 'Registos entregues a tempo, completos e precisos?' },
+            { t: 'Coordenação entre equipas', d: 'As equipas estavam sincronizadas? Passou informação de forma eficaz?' },
+            { t: 'Gestão de incidentes e reclamações', d: 'Incidentes tratados com rapidez e profissionalismo? Follow-up feito?' }
+          ]
+        },
+        {
+          num: 3,
+          title: 'Liderança e Desenvolvimento',
+          sub: 'Como inspira, orienta e desenvolve as suas equipas',
+          criteria: [
+            { t: 'Motivação e desenvolvimento das equipas', d: 'As equipas estão motivadas e a crescer? Identificou talentos e dificuldades?' },
+            { t: 'Formação e desenvolvimento de competências', d: 'Proporcionou ou facilitou formação? Corrigiu práticas inadequadas?' },
+            { t: 'Resolução de conflitos internos', d: 'Conflitos dentro das equipas geridos com maturidade e eficácia?' },
+            { t: 'Tomada de decisão sob pressão', d: 'Tomou boas decisões quando surgiu imprevistos? Manteve a calma?' },
+            { t: 'Exemplo e padrões de conduta', d: 'Deu o exemplo? A sua atitude reflete os valores da Árealimpa?' }
+          ]
+        },
+        {
+          num: 4,
+          title: 'Resultados e Negócio',
+          sub: 'Contribuição para os objetivos comerciais e operacionais da empresa',
+          criteria: [
+            { t: 'Cumprimento dos KPIs operacionais', d: 'Os indicadores de desempenho operacional foram atingidos esta semana?' },
+            { t: 'Eficiência de custos e recursos', d: 'Os custos operacionais foram controlados? Sem desperdício de tempo ou material?' },
+            { t: 'Satisfação e retenção de clientes', d: 'Os clientes estão satisfeitos? Nenhum cliente em risco de perder?' },
+            { t: 'Cumprimento de prazos e compromissos', d: 'Todas as obras entregues dentro do prazo? Compromissos honrados?' }
+          ]
+        }
+      ],
+      bonus: [
+        { t: 'Zero reclamações de clientes na semana', d: 'Semana sem incidentes, reclamações ou problemas de cliente' },
+        { t: 'Trouxe um novo cliente ou oportunidade', d: 'Prospetou, identificou ou recomendou um novo cliente ou contrato' },
+        { t: 'Entregou todos os relatórios sem erros e a tempo', d: 'Documentos completos, corretos e dentro do prazo estipulado' },
+        { t: 'Desenvolveu ou formou um membro da equipa', d: 'Programa de formação, acompanhamento ou progressão de um colaborador' },
+        { t: 'Implementou uma melhoria de processo', d: 'Sugestão aprovada e colocada em prática que melhora operações' },
+        { t: '100% de obras entregues a tempo e com qualidade', d: 'Sem atrasos, sem falhas de qualidade em nenhuma obra da semana' }
+      ],
+      thresholds: [
+        { max: 30, label: 'Excelente', cls: 'excelente' },
+        { max: 47, label: 'Bom', cls: 'bom' },
+        { max: 62, label: 'Suficiente', cls: 'suficiente' },
+        { max: 76, label: 'Fraco', cls: 'fraco' },
+        { max: 95, label: 'Crítico', cls: 'critico' }
+      ]
+    }
+  };
+
+  var RATING_LABELS = ['Excelente', 'Bom', 'Suficiente', 'Fraco', 'Crítico'];
+  var STORAGE_KEY = 'al_evaluations_v1';
+  var DRAFT_KEY = 'al_draft_v1';
+
+  /* ---------- STATE ---------- */
+  var currentRole = null;
+  var currentRatings = {};   // key: "cat-crit" -> 1..5
+  var currentBonus = {};     // key: idx -> true
+  var editingId = null;      // if editing existing record
+
+  /* ---------- DOM HELPERS ---------- */
+  function el(id) { return document.getElementById(id); }
+  function escapeHtml(s) {
+    if (s === null || s === undefined) return '';
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+  function formatDate(iso) {
+    if (!iso) return '—';
+    var parts = iso.split('-');
+    if (parts.length !== 3) return iso;
+    return parts[2] + '/' + parts[1] + '/' + parts[0];
+  }
+
+  /* ---------- STORAGE ---------- */
+  function getEvaluations() {
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return [];
+      var data = JSON.parse(raw);
+      return (data && data.length) ? data : [];
+    } catch (e) { return []; }
+  }
+  function saveEvaluations(list) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+      return true;
+    } catch (e) { return false; }
+  }
+  function saveDraft() {
+    if (!currentRole) return;
+    try {
+      var d = {
+        role: currentRole.id,
+        ratings: currentRatings,
+        bonus: currentBonus,
+        nome: el('metaNome').value,
+        semana: el('metaSemana').value,
+        avaliador: el('metaAvaliador').value,
+        equipa: el('metaEquipa').value,
+        obras: el('metaObras').value,
+        equipas: el('metaEquipas').value,
+        notes: el('notesField').value,
+        editingId: editingId
+      };
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(d));
+    } catch (e) {}
+  }
+  function clearDraft() {
+    try { localStorage.removeItem(DRAFT_KEY); } catch (e) {}
+  }
+  function loadDraft() {
+    try {
+      var raw = localStorage.getItem(DRAFT_KEY);
+      if (!raw) return null;
+      return JSON.parse(raw);
+    } catch (e) { return null; }
+  }
+
+  /* ---------- TOAST ---------- */
+  var toastTimer = null;
+  function toast(msg, type) {
+    var t = el('toast');
+    t.className = 'toast';
+    if (type) t.className += ' ' + type;
+    t.textContent = msg;
+    setTimeout(function() { t.className += ' show'; }, 10);
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function() {
+      t.className = t.className.replace(' show', '');
+    }, 2400);
+  }
+
+  /* ---------- MODAL ---------- */
+  var modalCallback = null;
+  function showModal(title, msg, cb) {
+    el('modalTitle').textContent = title;
+    el('modalMsg').textContent = msg;
+    modalCallback = cb;
+    el('modalBg').className = 'modal-bg show';
+  }
+  function hideModal() {
+    el('modalBg').className = 'modal-bg';
+    modalCallback = null;
+  }
+
+  /* ---------- HOME SCREEN ---------- */
+  function renderHome() {
+    var grid = el('roleGrid');
+    grid.innerHTML = '';
+
+    var keys = ['operador', 'chefe', 'encarregado'];
+    for (var i = 0; i < keys.length; i++) {
+      var r = ROLES[keys[i]];
+      var btn = document.createElement('button');
+      btn.className = 'role-card';
+      btn.setAttribute('data-role', r.id);
+      btn.innerHTML =
+        '<div class="role-icon">' + escapeHtml(r.icon) + '</div>' +
+        '<div class="role-title">' + escapeHtml(r.title) + '</div>' +
+        '<div class="role-desc">' + escapeHtml(r.desc) + '</div>' +
+        '<div class="role-meta">' + escapeHtml(r.meta) + '</div>';
+      grid.appendChild(btn);
+    }
+
+    renderHistory();
+  }
+
+  function renderHistory() {
+    var container = el('historyContainer');
+    var list = getEvaluations();
+
+    if (!list.length) {
+      container.innerHTML = '<div class="history-empty">Ainda não há avaliações guardadas neste dispositivo.</div>';
+      return;
+    }
+
+    // sort by date desc
+    list.sort(function(a, b) { return (b.savedAt || 0) - (a.savedAt || 0); });
+
+    var html = '<div class="history-list">';
+    for (var i = 0; i < list.length; i++) {
+      var ev = list[i];
+      var roleTitle = ROLES[ev.role] ? ROLES[ev.role].title : ev.role;
+      var clsName = ev.classification ? ev.classification.cls : 'bom';
+      var clsLabel = ev.classification ? ev.classification.label : '—';
+      html += '<div class="history-item" data-id="' + escapeHtml(ev.id) + '">' +
+        '<div class="hi-main">' +
+          '<div class="hi-name">' + escapeHtml(ev.nome || 'Sem nome') + '</div>' +
+          '<div class="hi-meta">' + escapeHtml(roleTitle) + ' · Semana ' + escapeHtml(formatDate(ev.semana)) + '</div>' +
+        '</div>' +
+        '<div class="hi-score">' +
+          '<div class="hi-pts">' + ev.total + ' / ' + ev.max + '</div>' +
+          '<span class="hi-class cls-' + clsName + '">' + escapeHtml(clsLabel) + '</span>' +
+        '</div>' +
+        '<button class="hi-delete" data-delete="' + escapeHtml(ev.id) + '" title="Eliminar">&#10005;</button>' +
+      '</div>';
+    }
+    html += '</div>';
+    container.innerHTML = html;
+  }
+
+  /* ---------- FORM RENDER ---------- */
+  function openForm(roleId, existing) {
+    currentRole = ROLES[roleId];
+    if (!currentRole) return;
+
+    currentRatings = {};
+    currentBonus = {};
+    editingId = null;
+
+    el('formIcon').textContent = currentRole.icon;
+    el('formTitle').textContent = currentRole.title;
+    el('formSubtitle').textContent = currentRole.subtitle;
+
+    // toggle Encarregado-specific field
+    if (currentRole.id === 'encarregado') {
+      el('metaEquipaField').style.display = 'none';
+      el('metaEquipasField').style.display = '';
+    } else {
+      el('metaEquipaField').style.display = '';
+      el('metaEquipasField').style.display = 'none';
+    }
+
+    renderCategories();
+    renderBonus();
+
+    // Pre-fill if editing or draft
+    if (existing) {
+      editingId = existing.id;
+      currentRatings = existing.ratings || {};
+      currentBonus = existing.bonus || {};
+      el('metaNome').value = existing.nome || '';
+      el('metaSemana').value = existing.semana || '';
+      el('metaAvaliador').value = existing.avaliador || '';
+      el('metaEquipa').value = existing.equipa || '';
+      el('metaObras').value = existing.obras || '';
+      el('metaEquipas').value = existing.equipas || '';
+      el('notesField').value = existing.notes || '';
+    } else {
+      // try to load draft for this role
+      var draft = loadDraft();
+      if (draft && draft.role === roleId) {
+        currentRatings = draft.ratings || {};
+        currentBonus = draft.bonus || {};
+        el('metaNome').value = draft.nome || '';
+        el('metaSemana').value = draft.semana || todayISO();
+        el('metaAvaliador').value = draft.avaliador || '';
+        el('metaEquipa').value = draft.equipa || '';
+        el('metaObras').value = draft.obras || '';
+        el('metaEquipas').value = draft.equipas || '';
+        el('notesField').value = draft.notes || '';
+        editingId = draft.editingId || null;
+      } else {
+        el('metaNome').value = '';
+        el('metaSemana').value = todayISO();
+        el('metaAvaliador').value = '';
+        el('metaEquipa').value = '';
+        el('metaObras').value = '';
+        el('metaEquipas').value = '';
+        el('notesField').value = '';
+      }
+    }
+
+    refreshAllRatings();
+    refreshAllBonus();
+    updateScore();
+    showScreen('form');
+  }
+
+  function todayISO() {
+    var d = new Date();
+    var m = String(d.getMonth() + 1);
+    var day = String(d.getDate());
+    if (m.length === 1) m = '0' + m;
+    if (day.length === 1) day = '0' + day;
+    return d.getFullYear() + '-' + m + '-' + day;
+  }
+
+  function renderCategories() {
+    var html = '';
+    for (var i = 0; i < currentRole.categories.length; i++) {
+      var cat = currentRole.categories[i];
+      html += '<div class="category">' +
+        '<div class="category-header">' +
+          '<div class="category-num">' + cat.num + '</div>' +
+          '<div>' +
+            '<div class="category-title">' + escapeHtml(cat.title) + '</div>' +
+            '<div class="category-sub">' + escapeHtml(cat.sub) + '</div>' +
+          '</div>' +
+        '</div>';
+
+      for (var j = 0; j < cat.criteria.length; j++) {
+        var crit = cat.criteria[j];
+        var key = i + '-' + j;
+        html += '<div class="criterion">' +
+          '<div class="crit-title">' + escapeHtml(crit.t) + '</div>' +
+          '<div class="crit-desc">' + escapeHtml(crit.d) + '</div>' +
+          '<div class="rating-group" data-rating-group="' + key + '">';
+        for (var r = 1; r <= 5; r++) {
+          html += '<button type="button" class="rating-btn" data-rating="' + key + '-' + r + '">' +
+            '<span class="rating-num">' + r + '</span>' +
+            '<span class="rating-label">' + RATING_LABELS[r - 1] + '</span>' +
+          '</button>';
+        }
+        html += '</div></div>';
+      }
+      html += '</div>';
+    }
+    el('categoriesContainer').innerHTML = html;
+  }
+
+  function renderBonus() {
+    var html = '<div class="bonus-section">' +
+      '<div class="bonus-header">' +
+        '<div class="bonus-star">&#9733;</div>' +
+        '<div>' +
+          '<div class="category-title">Bónus — Quem Faz Acontecer</div>' +
+          '<div class="bonus-info">Cada bónus marcado reduz 2 pontos na pontuação final</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="bonus-list">';
+
+    for (var i = 0; i < currentRole.bonus.length; i++) {
+      var b = currentRole.bonus[i];
+      html += '<div class="bonus-item" data-bonus="' + i + '">' +
+        '<div class="bonus-check">&#10003;</div>' +
+        '<div class="bonus-text">' +
+          '<div class="bonus-title-text">' + escapeHtml(b.t) + '</div>' +
+          '<div class="bonus-desc-text">' + escapeHtml(b.d) + '</div>' +
+        '</div>' +
+        '<div class="bonus-points">&minus;2 pts</div>' +
+      '</div>';
+    }
+    html += '</div></div>';
+    el('bonusContainer').innerHTML = html;
+  }
+
+  function refreshAllRatings() {
+    var btns = document.querySelectorAll('.rating-btn');
+    for (var i = 0; i < btns.length; i++) {
+      var dataset = btns[i].getAttribute('data-rating');
+      if (!dataset) continue;
+      var parts = dataset.split('-');
+      // key is "cat-crit", value is the last segment
+      var val = parseInt(parts[parts.length - 1], 10);
+      var key = parts.slice(0, parts.length - 1).join('-');
+      // strip selection class
+      btns[i].className = 'rating-btn';
+      if (currentRatings[key] === val) {
+        btns[i].className = 'rating-btn sel-' + val;
+      }
+    }
+  }
+
+  function refreshAllBonus() {
+    var items = document.querySelectorAll('.bonus-item');
+    for (var i = 0; i < items.length; i++) {
+      var idx = items[i].getAttribute('data-bonus');
+      if (currentBonus[idx]) {
+        items[i].className = 'bonus-item checked';
+      } else {
+        items[i].className = 'bonus-item';
+      }
+    }
+  }
+
+  /* ---------- SCORING ---------- */
+  function calculateScore() {
+    var base = 0;
+    var totalCriteria = 0;
+    for (var i = 0; i < currentRole.categories.length; i++) {
+      totalCriteria += currentRole.categories[i].criteria.length;
+    }
+    // Sum ratings; unrated criteria count as 0 (so live score is incremental)
+    for (var key in currentRatings) {
+      if (currentRatings.hasOwnProperty(key)) {
+        base += currentRatings[key];
+      }
+    }
+    var bonusCount = 0;
+    for (var k in currentBonus) {
+      if (currentBonus.hasOwnProperty(k) && currentBonus[k]) bonusCount++;
+    }
+    var bonusPts = bonusCount * 2;
+    var total = base - bonusPts;
+    if (total < 0) total = 0;
+    return {
+      base: base,
+      bonus: bonusPts,
+      total: total,
+      max: currentRole.maxScore,
+      totalCriteria: totalCriteria,
+      ratedCount: countRated()
+    };
+  }
+
+  function countRated() {
+    var c = 0;
+    for (var k in currentRatings) {
+      if (currentRatings.hasOwnProperty(k)) c++;
+    }
+    return c;
+  }
+
+  function getClassification(total) {
+    var ths = currentRole.thresholds;
+    for (var i = 0; i < ths.length; i++) {
+      if (total <= ths[i].max) return ths[i];
+    }
+    return ths[ths.length - 1];
+  }
+
+  function updateScore() {
+    var s = calculateScore();
+    el('scoreBase').textContent = s.base;
+    el('scoreBonus').textContent = '-' + s.bonus;
+    el('scoreMax').textContent = s.max;
+    el('scoreTotal').textContent = s.total;
+    var cls = getClassification(s.total);
+    var classEl = el('scoreClass');
+    classEl.textContent = cls.label + ' (' + s.ratedCount + '/' + s.totalCriteria + ' avaliados)';
+  }
+
+  /* ---------- NAVIGATION ---------- */
+  function showScreen(name) {
+    var screens = document.querySelectorAll('.screen');
+    for (var i = 0; i < screens.length; i++) {
+      screens[i].className = 'screen';
+    }
+    el('screen-' + name).className = 'screen active';
+    window.scrollTo(0, 0);
+    if (name === 'home') {
+      el('backBtn').style.display = 'none';
+      renderHome();
+    } else {
+      el('backBtn').style.display = '';
+    }
+  }
+
+  /* ---------- SAVE / EXPORT / CLEAR ---------- */
+  function handleSave() {
+    var nome = el('metaNome').value.trim();
+    if (!nome) {
+      toast('Indica o nome do colaborador', 'error');
+      el('metaNome').focus();
+      return;
+    }
+    var s = calculateScore();
+    if (s.ratedCount === 0) {
+      toast('Avalia pelo menos um critério', 'error');
+      return;
+    }
+    var cls = getClassification(s.total);
+
+    var record = {
+      id: editingId || ('ev_' + Date.now() + '_' + Math.floor(Math.random() * 10000)),
+      role: currentRole.id,
+      nome: nome,
+      semana: el('metaSemana').value,
+      avaliador: el('metaAvaliador').value.trim(),
+      equipa: el('metaEquipa').value.trim(),
+      obras: el('metaObras').value,
+      equipas: el('metaEquipas').value,
+      notes: el('notesField').value.trim(),
+      ratings: currentRatings,
+      bonus: currentBonus,
+      base: s.base,
+      bonusPts: s.bonus,
+      total: s.total,
+      max: s.max,
+      classification: cls,
+      savedAt: Date.now()
+    };
+
+    var list = getEvaluations();
+    if (editingId) {
+      for (var i = 0; i < list.length; i++) {
+        if (list[i].id === editingId) {
+          list[i] = record;
+          break;
+        }
+      }
+    } else {
+      list.push(record);
+    }
+
+    if (saveEvaluations(list)) {
+      clearDraft();
+      toast('Avaliação guardada', 'success');
+      setTimeout(function() { showScreen('home'); }, 600);
+    } else {
+      toast('Erro ao guardar', 'error');
+    }
+  }
+
+  function handleExport() {
+    var s = calculateScore();
+    var cls = getClassification(s.total);
+    var nome = el('metaNome').value.trim() || 'Sem nome';
+    var semana = el('metaSemana').value;
+
+    var lines = [];
+    lines.push('ÁREALIMPA — ' + currentRole.subtitle);
+    lines.push('================================================');
+    lines.push('');
+    lines.push('Colaborador: ' + nome);
+    lines.push('Semana de: ' + formatDate(semana));
+    lines.push('Avaliado por: ' + (el('metaAvaliador').value.trim() || '—'));
+    if (currentRole.id === 'encarregado') {
+      lines.push('Nº Equipas Geridas: ' + (el('metaEquipas').value || '—'));
+    } else {
+      lines.push('Equipa: ' + (el('metaEquipa').value.trim() || '—'));
+    }
+    lines.push('Nº Obras na Semana: ' + (el('metaObras').value || '—'));
+    lines.push('');
+
+    for (var i = 0; i < currentRole.categories.length; i++) {
+      var cat = currentRole.categories[i];
+      lines.push('--- ' + cat.num + '. ' + cat.title.toUpperCase() + ' ---');
+      for (var j = 0; j < cat.criteria.length; j++) {
+        var crit = cat.criteria[j];
+        var key = i + '-' + j;
+        var rating = currentRatings[key];
+        var label = rating ? (rating + ' - ' + RATING_LABELS[rating - 1]) : 'NÃO AVALIADO';
+        lines.push('  • ' + crit.t + ': ' + label);
+      }
+      lines.push('');
+    }
+
+    lines.push('--- BÓNUS ---');
+    var anyBonus = false;
+    for (var b = 0; b < currentRole.bonus.length; b++) {
+      if (currentBonus[b]) {
+        lines.push('  ✓ ' + currentRole.bonus[b].t + ' (-2 pts)');
+        anyBonus = true;
+      }
+    }
+    if (!anyBonus) lines.push('  (nenhum bónus marcado)');
+    lines.push('');
+
+    var notes = el('notesField').value.trim();
+    if (notes) {
+      lines.push('--- OBSERVAÇÕES ---');
+      lines.push(notes);
+      lines.push('');
+    }
+
+    lines.push('================================================');
+    lines.push('PONTUAÇÃO BASE: ' + s.base + ' pts');
+    lines.push('BÓNUS APLICADO: -' + s.bonus + ' pts');
+    lines.push('PONTUAÇÃO FINAL: ' + s.total + ' / ' + s.max + ' pts');
+    lines.push('CLASSIFICAÇÃO: ' + cls.label.toUpperCase());
+    lines.push('');
+    lines.push('Exportado em ' + formatDate(todayISO()));
+
+    var text = lines.join('\n');
+    var safeName = nome.replace(/[^a-zA-Z0-9\u00C0-\u017F\- ]/g, '').replace(/\s+/g, '_');
+    var filename = 'Avaliacao_' + currentRole.title.replace(/ /g, '_') + '_' + safeName + '_' + semana + '.txt';
+
+    downloadText(text, filename);
+    toast('Ficheiro exportado', 'success');
+  }
+
+  function downloadText(text, filename) {
+    try {
+      var blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(function() { URL.revokeObjectURL(url); }, 100);
+    } catch (e) {
+      // iOS Safari fallback
+      var win = window.open('', '_blank');
+      if (win) {
+        win.document.write('<pre style="font-family:monospace; white-space:pre-wrap; padding:20px;">' + escapeHtml(text) + '</pre>');
+        win.document.title = filename;
+      } else {
+        toast('Não foi possível exportar', 'error');
+      }
+    }
+  }
+
+  function handleClear() {
+    showModal('Limpar formulário', 'Tens a certeza? Vais perder os dados não guardados.', function() {
+      currentRatings = {};
+      currentBonus = {};
+      el('metaNome').value = '';
+      el('metaAvaliador').value = '';
+      el('metaEquipa').value = '';
+      el('metaObras').value = '';
+      el('metaEquipas').value = '';
+      el('notesField').value = '';
+      clearDraft();
+      refreshAllRatings();
+      refreshAllBonus();
+      updateScore();
+      toast('Formulário limpo');
+    });
+  }
+
+  function handleHistoryClick(id) {
+    var list = getEvaluations();
+    for (var i = 0; i < list.length; i++) {
+      if (list[i].id === id) {
+        openForm(list[i].role, list[i]);
+        return;
+      }
+    }
+  }
+
+  function handleHistoryDelete(id) {
+    showModal('Eliminar avaliação', 'Esta ação não pode ser desfeita. Continuar?', function() {
+      var list = getEvaluations();
+      var newList = [];
+      for (var i = 0; i < list.length; i++) {
+        if (list[i].id !== id) newList.push(list[i]);
+      }
+      saveEvaluations(newList);
+      renderHistory();
+      toast('Avaliação eliminada');
+    });
+  }
+
+  /* ---------- EVENT DELEGATION ---------- */
+  document.addEventListener('click', function(e) {
+    var target = e.target;
+    // walk up to find the closest meaningful element
+    var node = target;
+    while (node && node !== document.body) {
+      // role card
+      if (node.getAttribute && node.getAttribute('data-role')) {
+        openForm(node.getAttribute('data-role'));
+        return;
+      }
+      // rating button
+      if (node.getAttribute && node.getAttribute('data-rating')) {
+        var d = node.getAttribute('data-rating');
+        var p = d.split('-');
+        var val = parseInt(p[p.length - 1], 10);
+        var key = p.slice(0, p.length - 1).join('-');
+        // toggle: if already selected, deselect
+        if (currentRatings[key] === val) {
+          delete currentRatings[key];
+        } else {
+          currentRatings[key] = val;
+        }
+        refreshAllRatings();
+        updateScore();
+        saveDraft();
+        return;
+      }
+      // bonus item
+      if (node.getAttribute && node.getAttribute('data-bonus') !== null && !node.getAttribute('data-delete')) {
+        var bIdx = node.getAttribute('data-bonus');
+        currentBonus[bIdx] = !currentBonus[bIdx];
+        refreshAllBonus();
+        updateScore();
+        saveDraft();
+        return;
+      }
+      // history delete
+      if (node.getAttribute && node.getAttribute('data-delete')) {
+        e.stopPropagation();
+        handleHistoryDelete(node.getAttribute('data-delete'));
+        return;
+      }
+      // history item click
+      if (node.getAttribute && node.getAttribute('data-id')) {
+        handleHistoryClick(node.getAttribute('data-id'));
+        return;
+      }
+      node = node.parentNode;
+    }
+  });
+
+  // form meta changes -> save draft
+  document.addEventListener('input', function(e) {
+    var t = e.target;
+    if (!t || !t.id) return;
+    if (t.id === 'metaNome' || t.id === 'metaSemana' || t.id === 'metaAvaliador' ||
+        t.id === 'metaEquipa' || t.id === 'metaObras' || t.id === 'metaEquipas' ||
+        t.id === 'notesField') {
+      saveDraft();
+    }
+  });
+
+  el('homeBtn').addEventListener('click', function() {
+    if (el('screen-form').className.indexOf('active') !== -1) {
+      showModal('Voltar ao início', 'Os dados não guardados serão mantidos como rascunho. Continuar?', function() {
+        showScreen('home');
+      });
+    } else {
+      showScreen('home');
+    }
+  });
+
+  el('backBtn').addEventListener('click', function() {
+    showScreen('home');
+  });
+
+  el('saveBtn').addEventListener('click', handleSave);
+  el('exportBtn').addEventListener('click', handleExport);
+  el('clearBtn').addEventListener('click', handleClear);
+
+  el('modalCancel').addEventListener('click', hideModal);
+  el('modalOk').addEventListener('click', function() {
+    if (modalCallback) modalCallback();
+    hideModal();
+  });
+  el('modalBg').addEventListener('click', function(e) {
+    if (e.target.id === 'modalBg') hideModal();
+  });
+
+  /* ---------- INIT ---------- */
+  renderHome();
+
+})();
+</script>
+</body>
+</html>
