@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-PT">
 <head>
@@ -632,6 +633,36 @@
     outline: 2px solid #449BF5;
     outline-offset: 2px;
   }
+
+  /* SYNC BADGE */
+  .sync-badge {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 4px 9px;
+    border-radius: 100px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    border: 1px solid rgba(255,255,255,0.3);
+  }
+  .sync-off { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); }
+  .sync-checking { background: rgba(255,200,0,0.25); color: #ffe066; }
+  .sync-on { background: rgba(0,180,80,0.3); color: #6effa0; }
+  .sync-error { background: rgba(255,80,80,0.25); color: #ffaaaa; }
+
+  /* CONFIG MODAL */
+  .config-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+  .config-field label { font-size: 11px; font-weight: 600; text-transform: uppercase; color: #5b6781; letter-spacing: 0.8px; }
+  .config-field input {
+    border: 1px solid #d4ddec; border-radius: 9px; padding: 10px 12px;
+    font-size: 13px; font-family: inherit; background: #f7f9fd; color: #1a2540;
+  }
+  .config-field input:focus { outline: none; border-color: #449BF5; background: #fff; box-shadow: 0 0 0 3px rgba(68,155,245,0.15); }
+  .config-status { font-size: 12px; margin-top: 6px; min-height: 18px; font-weight: 500; }
+  .config-status.ok { color: #0a7d3a; }
+  .config-status.err { color: #b50808; }
+  .config-status.checking { color: #8a6300; }
+
 </style>
 </head>
 <body>
@@ -646,8 +677,10 @@
       </div>
     </div>
     <div class="topbar-actions">
+      <span id="syncBadge" class="sync-badge sync-off">Sem Sheets</span>
+      <button id="configBtn" class="icon-btn" title="Configurar Google Sheets">&#9881;</button>
       <button id="backBtn" class="icon-btn" title="Voltar" style="display:none;">&larr;</button>
-      <button id="homeBtn" class="icon-btn" title="Início">&#8962;</button>
+      <button id="homeBtn" class="icon-btn" title="Inicio">&#8962;</button>
     </div>
   </div>
 </header>
@@ -757,6 +790,22 @@
     <div class="modal-actions">
       <button class="btn btn-secondary" id="modalCancel">Cancelar</button>
       <button class="btn btn-primary" id="modalOk">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<div id="configModalBg" class="modal-bg">
+  <div class="modal">
+    <h3>&#9881; Configurar Google Sheets</h3>
+    <p>Cola aqui o URL do teu Google Apps Script (Web App URL) para sincronizar avaliacoes com o Google Sheets.</p>
+    <div class="config-field">
+      <label>URL do Web App</label>
+      <input type="url" id="configUrlInput" placeholder="https://script.google.com/macros/s/...">
+    </div>
+    <div class="config-status" id="configStatus"></div>
+    <div class="modal-actions" style="margin-top:12px;">
+      <button class="btn btn-secondary" id="configCancel">Cancelar</button>
+      <button class="btn btn-primary" id="configTest">Testar e Guardar</button>
     </div>
   </div>
 </div>
@@ -975,12 +1024,20 @@
   var RATING_LABELS = ['Excelente', 'Bom', 'Suficiente', 'Fraco', 'Crítico'];
   var STORAGE_KEY = 'al_evaluations_v1';
   var DRAFT_KEY = 'al_draft_v1';
+  var SCRIPT_URL_KEY = 'al_script_url';
+
+  /* ---------- GOOGLE SHEETS CONFIG ----------
+     Cola aqui o URL do teu Google Apps Script web app.
+     Ou deixa vazio — a app funciona offline e pede o URL na primeira utilização.
+  ---------------------------------------------------------- */
+  var GOOGLE_SCRIPT_URL = '';
 
   /* ---------- STATE ---------- */
   var currentRole = null;
   var currentRatings = {};   // key: "cat-crit" -> 1..5
   var currentBonus = {};     // key: idx -> true
   var editingId = null;      // if editing existing record
+  var syncEnabled = false;   // true quando URL válido configurado
 
   /* ---------- DOM HELPERS ---------- */
   function el(id) { return document.getElementById(id); }
@@ -1414,10 +1471,147 @@
 
     if (saveEvaluations(list)) {
       clearDraft();
-      toast('Avaliação guardada', 'success');
-      setTimeout(function() { showScreen('home'); }, 600);
+      var url = getScriptUrl();
+      if (url) {
+        toast('A guardar e sincronizar...', 'success');
+        syncRecordToSheets(record, url, function(ok) {
+          if (ok) {
+            toast('Guardado e sincronizado', 'success');
+          } else {
+            toast('Guardado localmente (sem ligacao ao Sheets)');
+          }
+          setTimeout(function() { showScreen('home'); }, 800);
+        });
+      } else {
+        toast('Avaliacao guardada', 'success');
+        setTimeout(function() { showScreen('home'); }, 600);
+      }
     } else {
       toast('Erro ao guardar', 'error');
+    }
+  }
+
+  /* ---------- GOOGLE SHEETS SYNC ---------- */
+
+  function getScriptUrl() {
+    if (GOOGLE_SCRIPT_URL && GOOGLE_SCRIPT_URL.indexOf('script.google.com') !== -1) {
+      return GOOGLE_SCRIPT_URL;
+    }
+    try {
+      var stored = localStorage.getItem(SCRIPT_URL_KEY);
+      if (stored && stored.indexOf('script.google.com') !== -1) return stored;
+    } catch (e) {}
+    return null;
+  }
+
+  function setScriptUrl(url) {
+    try { localStorage.setItem(SCRIPT_URL_KEY, url); } catch (e) {}
+  }
+
+  function syncRecordToSheets(record, url, callback) {
+    var bonusLabels = buildBonusLabels(record.bonus);
+    var payload = JSON.stringify({
+      action: 'save',
+      record: {
+        id: record.id,
+        roleTitle: currentRole ? currentRole.title : record.role,
+        role: record.role,
+        nome: record.nome,
+        semana: record.semana,
+        avaliador: record.avaliador,
+        equipa: record.equipa,
+        obras: record.obras,
+        equipas: record.equipas,
+        base: record.base,
+        bonusPts: record.bonusPts,
+        total: record.total,
+        max: record.max,
+        classLabel: record.classification ? record.classification.label : '',
+        ratedCount: record.ratedCount || 0,
+        totalCriteria: record.totalCriteria || 0,
+        notes: record.notes,
+        ratings: record.ratings,
+        bonusLabels: bonusLabels
+      }
+    });
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', url, true);
+    xhr.setRequestHeader('Content-Type', 'text/plain');
+    xhr.timeout = 10000;
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          try {
+            var resp = JSON.parse(xhr.responseText);
+            callback(resp.ok === true);
+          } catch (e) { callback(false); }
+        } else {
+          callback(false);
+        }
+      }
+    };
+    xhr.ontimeout = function() { callback(false); };
+    xhr.onerror = function() { callback(false); };
+    try { xhr.send(payload); } catch (e) { callback(false); }
+  }
+
+  function buildBonusLabels(bonusObj) {
+    if (!currentRole || !bonusObj) return [];
+    var labels = [];
+    for (var k in bonusObj) {
+      if (bonusObj.hasOwnProperty(k) && bonusObj[k]) {
+        var idx = parseInt(k, 10);
+        if (currentRole.bonus[idx]) {
+          labels.push(currentRole.bonus[idx].t);
+        }
+      }
+    }
+    return labels;
+  }
+
+  function pingSheets(url, callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url + '?action=ping', true);
+    xhr.timeout = 8000;
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          try {
+            var resp = JSON.parse(xhr.responseText);
+            callback(resp.ok === true);
+          } catch (e) { callback(false); }
+        } else {
+          callback(false);
+        }
+      }
+    };
+    xhr.ontimeout = function() { callback(false); };
+    xhr.onerror = function() { callback(false); };
+    try { xhr.send(); } catch (e) { callback(false); }
+  }
+
+  function updateSyncBadge() {
+    var badge = el('syncBadge');
+    if (!badge) return;
+    var url = getScriptUrl();
+    if (!url) {
+      badge.className = 'sync-badge sync-off';
+      badge.textContent = 'Sem Sheets';
+    } else {
+      badge.className = 'sync-badge sync-checking';
+      badge.textContent = 'A verificar...';
+      pingSheets(url, function(ok) {
+        if (ok) {
+          badge.className = 'sync-badge sync-on';
+          badge.textContent = 'Sheets OK';
+          syncEnabled = true;
+        } else {
+          badge.className = 'sync-badge sync-error';
+          badge.textContent = 'Sheets offline';
+          syncEnabled = false;
+        }
+      });
     }
   }
 
@@ -1643,10 +1837,69 @@
     if (e.target.id === 'modalBg') hideModal();
   });
 
+  /* ---------- CONFIG MODAL EVENTS ---------- */
+  el('configBtn').addEventListener('click', function() {
+    var current = getScriptUrl() || '';
+    el('configUrlInput').value = current;
+    el('configStatus').textContent = '';
+    el('configStatus').className = 'config-status';
+    el('configModalBg').className = 'modal-bg show';
+  });
+
+  el('configCancel').addEventListener('click', function() {
+    el('configModalBg').className = 'modal-bg';
+  });
+
+  el('configModalBg').addEventListener('click', function(e) {
+    if (e.target.id === 'configModalBg') {
+      el('configModalBg').className = 'modal-bg';
+    }
+  });
+
+  el('configTest').addEventListener('click', function() {
+    var url = el('configUrlInput').value.trim();
+    var statusEl = el('configStatus');
+
+    if (!url) {
+      statusEl.textContent = 'Cola um URL válido.';
+      statusEl.className = 'config-status err';
+      return;
+    }
+    if (url.indexOf('script.google.com') === -1) {
+      statusEl.textContent = 'O URL deve ser de script.google.com';
+      statusEl.className = 'config-status err';
+      return;
+    }
+
+    statusEl.textContent = 'A testar ligação...';
+    statusEl.className = 'config-status checking';
+    el('configTest').disabled = true;
+
+    pingSheets(url, function(ok) {
+      el('configTest').disabled = false;
+      if (ok) {
+        setScriptUrl(url);
+        GOOGLE_SCRIPT_URL = url;
+        statusEl.textContent = 'Ligação OK! URL guardado.';
+        statusEl.className = 'config-status ok';
+        setTimeout(function() {
+          el('configModalBg').className = 'modal-bg';
+          updateSyncBadge();
+          toast('Sheets configurado com sucesso', 'success');
+        }, 1200);
+      } else {
+        statusEl.textContent = 'Sem resposta. Verifica o URL e as permissoes do Apps Script.';
+        statusEl.className = 'config-status err';
+      }
+    });
+  });
+
   /* ---------- INIT ---------- */
   renderHome();
+  updateSyncBadge();
 
 })();
 </script>
+
 </body>
 </html>
